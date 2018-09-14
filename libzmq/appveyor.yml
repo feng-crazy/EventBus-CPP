@@ -1,0 +1,106 @@
+version: build-{build}
+
+shallow_clone: true
+
+skip_tags: true
+
+os: Visual Studio 2015
+
+environment:
+  CMAKE_GENERATOR: "Visual Studio 14 2015"
+  MSVCVERSION: "v140"
+  MSVCYEAR: "vs2015"
+  matrix:
+    - platform: Win32
+      configuration: Release
+      WITH_LIBSODIUM: ON
+      ENABLE_CURVE: ON
+    - platform: Win32
+      configuration: Release
+      POLLER: poll
+      WITH_LIBSODIUM: ON
+      ENABLE_CURVE: ON
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: "Visual Studio 15 2017"
+      MSVCVERSION: "v141"
+      MSVCYEAR: "vs2017"
+    - platform: Win32
+      configuration: Debug
+      WITH_LIBSODIUM: ON
+      ENABLE_CURVE: ON
+    - platform: x64
+      configuration: Release
+      WITH_LIBSODIUM: ON
+      ENABLE_CURVE: ON
+    - platform: x64
+      configuration: Debug
+      WITH_LIBSODIUM: ON
+      ENABLE_CURVE: ON
+    - platform: Win32
+      configuration: Release
+      WITH_LIBSODIUM: OFF
+      ENABLE_CURVE: OFF
+    - platform: Win32
+      configuration: Release
+      WITH_LIBSODIUM: OFF
+      ENABLE_CURVE: ON
+    - platform: Win32
+      configuration: Release
+      WITH_LIBSODIUM: ON
+      ENABLE_CURVE: ON
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+      CMAKE_GENERATOR: "Visual Studio 12 2013"
+      MSVCVERSION: "v120"
+      MSVCYEAR: "vs2013"
+    - platform: Win32
+      configuration: Release
+      WITH_LIBSODIUM: ON
+      ENABLE_CURVE: ON
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: "Visual Studio 15 2017"
+      MSVCVERSION: "v141"
+      MSVCYEAR: "vs2017"
+
+matrix:
+  fast_finish: false
+
+init:
+  #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - cmake --version
+  - msbuild /version
+  - cmd: reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v UserAuthentication /t REG_DWORD /d 0 /f
+
+install:
+  - cmd: if "%Platform%"=="x64" set "CMAKE_GENERATOR=%CMAKE_GENERATOR% Win64"
+  - cmd: echo "Generator='%CMAKE_GENERATOR%'"
+  - cmd: echo "Platform='%Platform%'"
+  - cmd: if "%WITH_LIBSODIUM%"=="ON" set LIBSODIUMDIR=C:\projects\libsodium
+  - cmd: if "%WITH_LIBSODIUM%"=="ON" git clone --branch stable --depth 1 --quiet "https://github.com/jedisct1/libsodium.git" %LIBSODIUMDIR%
+  - cmd: if "%WITH_LIBSODIUM%"=="ON" msbuild /v:minimal /maxcpucount:%NUMBER_OF_PROCESSORS% /p:Configuration=%Configuration%DLL %LIBSODIUMDIR%\builds\msvc\%MSVCYEAR%\libsodium\libsodium.vcxproj
+  - cmd: if "%WITH_LIBSODIUM%"=="ON" set SODIUM_LIBRARY_DIR="%LIBSODIUMDIR%\bin\%Platform%\%Configuration%\%MSVCVERSION%\dynamic"
+  - cmd: if "%WITH_LIBSODIUM%"=="ON" set SODIUM_INCLUDE_DIR="%LIBSODIUMDIR%\src\libsodium\include"
+  - cmd: if "%WITH_LIBSODIUM%"=="ON" move "%SODIUM_LIBRARY_DIR%\libsodium.lib" "%SODIUM_LIBRARY_DIR%\sodium.lib"
+
+clone_folder: C:\projects\libzmq
+
+before_build:
+  - cmd: set LIBZMQ_BUILDDIR=C:\projects\build_libzmq
+  - cmd: md "%LIBZMQ_BUILDDIR%"
+  - cd "%LIBZMQ_BUILDDIR%"
+  - cmd: cmake -D CMAKE_INCLUDE_PATH="%SODIUM_INCLUDE_DIR%" -D CMAKE_LIBRARY_PATH="%SODIUM_LIBRARY_DIR%" -D WITH_LIBSODIUM="%WITH_LIBSODIUM%" -D ENABLE_CURVE="%ENABLE_CURVE%" -D POLLER="%POLLER%" -D CMAKE_C_FLAGS_RELEASE="/MT" -D CMAKE_C_FLAGS_DEBUG="/MTd" -D WITH_LIBSODIUM="%WITH_LIBSODIUM%" -G "%CMAKE_GENERATOR%" "%APPVEYOR_BUILD_FOLDER%"
+
+build:
+  parallel: true
+  project: C:\projects\build_libzmq\ZeroMQ.sln
+  verbosity: minimal
+
+after_build:
+  - cmd: cd %LIBZMQ_BUILDDIR%\bin\%Configuration%"
+  - cmd: if "%WITH_LIBSODIUM%"=="ON" copy "%SODIUM_LIBRARY_DIR%\libsodium.dll" .
+  - cmd: 7z a -y -bd -mx=9 libzmq.zip *.exe *.dll
+  - ps: Push-AppveyorArtifact "libzmq.zip" -Filename "libzmq-${env:Platform}-${env:Configuration}.zip"
+
+test_script:
+  - cmd: cd "%LIBZMQ_BUILDDIR%"
+  - cmd: ctest -C "%Configuration%" -V
+

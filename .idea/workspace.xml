@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
+    <generated>
+      <config projectName="MsgCenter" targetName="MsgCenter" />
+      <config projectName="MsgCenter" targetName="test_bin" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2017875d-e3ca-4f6a-a06d-308e3655e2b5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="FUSProjectUsageTrigger">
+    <session id="944685323">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.14" value="1" />
+          <entry key="project.open.time.15" value="1" />
+          <entry key="project.open.time.6" value="1" />
+          <entry key="project.opened" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="cpp" value="10" />
+          <entry key="h" value="29" />
+          <entry key="txt" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="CMakeLists.txt" value="3" />
+          <entry key="ObjectiveC" value="39" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="h" value="99" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="ObjectiveC" value="99" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="MsgCenter" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/EventBus.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="731">
+              <caret line="44" column="42" selection-start-line="44" selection-start-column="42" selection-end-line="44" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UnitTest/TestEventTarget2.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/EventClient.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="17" column="13" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/EventTarget.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UnitTest/TestMthread2.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1003">
+              <caret line="62" column="24" selection-start-line="62" selection-start-column="24" selection-end-line="62" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UnitTest/TestEventTarget1.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="357">
+              <caret line="22" selection-start-line="22" selection-end-line="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UnitTest/TestMthread1.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="577">
+              <caret line="40" column="13" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
+              <folding>
+                <element signature="e#149#173#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UnitTest/EvemtType.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="14" column="22" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UnitTest/main.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="28" column="27" selection-start-line="28" selection-start-column="27" selection-end-line="28" selection-end-column="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/EventBus.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="645">
+              <caret line="54" selection-end-line="54" />
+              <folding>
+                <element signature="e#643#665#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>dispatch_message</find>
+      <find>setup_thread</find>
+      <find>object_test</find>
+      <find>message_handle</find>
+      <find>Edan Instruments</find>
+      <find>MsgDefine</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/MsgClient.cpp" />
+        <option value="$PROJECT_DIR$/CmdTarget.cpp" />
+        <option value="$PROJECT_DIR$/UnitTest/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/EventBus.cpp" />
+        <option value="$PROJECT_DIR$/EventClient.cpp" />
+        <option value="$PROJECT_DIR$/StandardHead.h" />
+        <option value="$PROJECT_DIR$/EventClient.h" />
+        <option value="$PROJECT_DIR$/EventTarget.h" />
+        <option value="$PROJECT_DIR$/UnitTest/EvemtType.h" />
+        <option value="$PROJECT_DIR$/UnitTest/TestMsgTarget1.h" />
+        <option value="$PROJECT_DIR$/UnitTest/TestMsgTarget2.h" />
+        <option value="$PROJECT_DIR$/UnitTest/TestEventTarget1.h" />
+        <option value="$PROJECT_DIR$/EventBus.h" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="65" />
+    <option name="y" value="-4" />
+    <option name="width" value="1851" />
+    <option name="height" value="910" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="MsgCenter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="EventBus-CPP" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MsgCenter" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ToolWindowFind.ShowToolbar" value="false" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.test_bin">
+    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MsgCenter" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MsgCenter" TARGET_NAME="MsgCenter" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test_bin" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MsgCenter" TARGET_NAME="test_bin" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="MsgCenter" RUN_TARGET_NAME="test_bin">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Build All" />
+      <item itemvalue="Application.MsgCenter" />
+      <item itemvalue="Application.test_bin" />
+    </list>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
+    <option name="ACTIVE_ACTIONS" value=",INHERITORS_AND_CATEGORIES,KIND" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2017875d-e3ca-4f6a-a06d-308e3655e2b5" name="Default Changelist" comment="" />
+      <created>1536892283284</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1536892283284</updated>
+      <workItem from="1536892287640" duration="2546000" />
+      <workItem from="1536895398324" duration="1746000" />
+      <workItem from="1536906599388" duration="9154000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="13446000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="65" y="-4" width="1851" height="910" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49934125" visible="true" weight="0.19168974" />
+      <window_info id="Favorites" order="1" side_tool="true" />
+      <window_info anchor="bottom" id="Database Changes" order="0" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="1" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="2" weight="0.32992327" />
+      <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="CMake" order="4" weight="0.3005115" />
+      <window_info anchor="bottom" id="Message" order="5" />
+      <window_info anchor="bottom" id="Run" order="6" />
+      <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="10" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24265929" />
+      <window_info anchor="right" id="Find" order="3" visible="true" weight="0.32963988" />
+      <window_info anchor="right" id="Database" order="4" weight="0.22880886" />
+      <window_info anchor="right" id="Structure" order="5" sideWeight="0.50065875" weight="0.17950138" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/UnitTest/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="76" selection-start-line="3" selection-start-column="76" selection-end-line="3" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-459">
+          <caret selection-end-line="3" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MsgDefine.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="40" column="11" lean-forward="true" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MsgPool.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-783">
+          <caret line="46" column="44" selection-start-line="46" selection-start-column="31" selection-end-line="46" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Singleton.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1">
+          <folding>
+            <element signature="e#319#336#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MThread.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="17" column="17" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EventTarget.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="79" selection-start-line="4" selection-start-column="79" selection-end-line="4" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EventCommon.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+          <folding>
+            <element signature="e#121#142#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/StandardHead.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" column="15" selection-start-line="20" selection-start-column="15" selection-end-line="20" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/MThread.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="20" column="13" selection-start-line="20" selection-start-column="6" selection-end-line="20" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EventClient.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-800">
+          <caret line="10" column="14" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EventTarget.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UnitTest/EvemtType.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="22" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UnitTest/TestMthread2.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1003">
+          <caret line="62" column="24" selection-start-line="62" selection-start-column="24" selection-end-line="62" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UnitTest/TestEventTarget2.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UnitTest/TestEventTarget1.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UnitTest/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="28" column="27" selection-start-line="28" selection-start-column="27" selection-end-line="28" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UnitTest/TestMthread1.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="577">
+          <caret line="40" column="13" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
+          <folding>
+            <element signature="e#149#173#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EventClient.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EventBus.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="731">
+          <caret line="44" column="42" selection-start-line="44" selection-start-column="42" selection-end-line="44" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EventBus.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="645">
+          <caret line="54" selection-end-line="54" />
+          <folding>
+            <element signature="e#643#665#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
