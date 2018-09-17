@@ -6,6 +6,7 @@
 #include "EventTarget.h"
 #include "EventClient.h"
 #include "EventBus.h"
+#include "EventDefine.h"
 
 const int NONE_HANDLE = 0xA5A5A5EF; // 随机数据没有任何意义，不要追究为什么。
 
@@ -55,7 +56,7 @@ int EventTarget::publish_message(const MsgEntity &msg)
 	}
 
 	thread::id id = this_thread::get_id();
-	EventBus *msg_center = EventSingleton::instance();
+	EventBus *msg_center = EventBusSingleton::instance();
 	EventClient *client = msg_center->find_client(id);
 	if(client == NULL)
 	{
@@ -115,7 +116,7 @@ void EventTarget::publish_thread_message(const MsgEntity &msg)
 
 	thread::id id = this_thread::get_id();
 
-	EventBus *msg_center = EventSingleton::instance();
+	EventBus *msg_center = EventBusSingleton::instance();
 
 	EventClient *client = msg_center->find_client(id);
 
@@ -192,7 +193,7 @@ void EventTarget::flush_thread_message(void)
 返回值:
 	订阅成功返回true，否则false，一个对象重复订阅一条消息的时候会返回false。
 ******************************************************************************/
-bool EventTarget::subscribe(Message id, EventTarget &object)
+bool EventTarget::subscribe(Event id, EventTarget &object)
 {
 	if(_client == NULL)
 	{
@@ -215,7 +216,7 @@ bool EventTarget::subscribe(Message id, EventTarget &object)
 返回值:	
 	订阅成功返回true，否则false，一个对象重复订阅消息的时候会返回false。
 ******************************************************************************/
-void EventTarget::subscribe(Message start_id, Message end_id, EventTarget &object)
+void EventTarget::subscribe(Event start_id, Event end_id, EventTarget &object)
 {
 	for(unsigned int id=start_id; id<=end_id; id++)
 	{
@@ -235,7 +236,7 @@ void EventTarget::subscribe(Message start_id, Message end_id, EventTarget &objec
 返回值:	
 	订阅成功返回true，否则false。
 ******************************************************************************/
-bool EventTarget::unsubscribe(Message id, EventTarget &object)
+bool EventTarget::unsubscribe(Event id, EventTarget &object)
 {
 	if(_client == NULL)
 	{
@@ -258,7 +259,7 @@ bool EventTarget::unsubscribe(Message id, EventTarget &object)
 返回值:	
 	订阅成功返回true，否则false。
 ******************************************************************************/
-void EventTarget::unsubscribe(Message start_id, Message end_id, EventTarget &object)
+void EventTarget::unsubscribe(Event start_id, Event end_id, EventTarget &object)
 {
 	for(unsigned int id=start_id; id<=end_id; id++)
 	{
@@ -318,7 +319,7 @@ EventTarget::EventTarget()
 	thread::id id = this_thread::get_id();
 	
 	// 从消息中心中检索出消息客户对象。
-	EventBus *msg_center = EventSingleton::instance();
+	EventBus *msg_center = EventBusSingleton::instance();
 	_client = msg_center->find_client(id);
 	
 	if(_client == NULL)

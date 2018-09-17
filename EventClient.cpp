@@ -17,7 +17,7 @@
 参数说明:
 返回值:
 ******************************************************************************/
-bool EventClient::register_observer(Message id, EventTarget &object)
+bool EventClient::register_observer(Event id, EventTarget &object)
 {
 	if(id >= EVENT_NR)
 	{
@@ -48,8 +48,7 @@ bool EventClient::register_observer(Message id, EventTarget &object)
 	}
 
 	// 订阅者已经满了。
-	printf("register_observer failed, and msgid = %d\n", id);
-//	stack_trace();
+	printf("register_observer failed, and event = %d\n", id);
 	return false;
 }
 
@@ -62,7 +61,7 @@ bool EventClient::register_observer(Message id, EventTarget &object)
 参数说明:
 返回值:
 ******************************************************************************/
-bool EventClient::unregister_observer(Message id, const EventTarget &object)
+bool EventClient::unregister_observer(Event id, const EventTarget &object)
 {
 	if(id >= EVENT_NR)
 	{
@@ -118,36 +117,40 @@ EventClient::EventClient()
 		}
 	}
 
-	EventBus *msg_center = EventSingleton::instance();
+	EventBus *event_bus = EventBusSingleton::instance();
 
-//	_zmq_context = msg_center->getZmqContext();
-//
-//	thread::id self_id= this_thread::get_id();
-//	printf("self_id = %p,%d, _zmq_context = %p \n",self_id,self_id,_zmq_context);
-//
-//
-//	//创建zmq的套接字，设置套接字为请求应答模式
-//	_sub_socket = zmq_socket(_zmq_context, ZMQ_SUB);
-//	assert(_sub_socket);
-//
-//	int rc = zmq_connect(_sub_socket, EventBus::MESSAGE_CENTER_ENDPOINT);
-//	assert(rc == 0);
-//
-//	rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, "boy", 3);
-//	assert(rc == 0);
-//	rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, "girl", 4);
-//	assert(rc == 0);
-//
-//	_pub_socket = zmq_socket(_zmq_context,ZMQ_PUB);
-//	assert(_pub_socket);
-//
-//	rc = zmq_bind(_pub_socket, EventBus::MESSAGE_CENTER_ENDPOINT);
-//	assert(rc == 0);
+	_zmq_context = EventBus::ZmqContext;
+
+	thread::id self_id = this_thread::get_id();
+	printf("self_id = %p,%d, _zmq_context = %p \n",self_id, self_id, _zmq_context);
 
 
-	if(msg_center->register_client(this_thread::get_id(), *this) == false)
+	//创建zmq的套接字，设置套接字为请求应答模式
+	_sub_socket = zmq_socket(_zmq_context, ZMQ_SUB);
+	assert(_sub_socket);
+
+	int rc = zmq_connect(_sub_socket, event_bus->XSUB_ADDR_PORT);
+	assert(rc == 0);
+
+	rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, "", 0);
+	assert(rc == 0);
+	rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, "", 0);
+	assert(rc == 0);
+
+	_pub_socket = zmq_socket(_zmq_context,ZMQ_PUB);
+	assert(_pub_socket);
+
+	rc = zmq_bind(_pub_socket, event_bus->XPUB_ADDR_PORT);
+	assert(rc == 0);
+
+
+	if(! event_bus->register_client(this_thread::get_id(), *this))
 	{
 		printf("Register client to message center is failed!\n");
+	}
+	else
+	{
+
 	}
 }
 

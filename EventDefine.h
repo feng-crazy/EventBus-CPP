@@ -6,7 +6,7 @@
 
 typedef long WParam;
 typedef long LParam;
-typedef unsigned Message;
+typedef unsigned Event;
 
 // 事件的优先级
 enum EventPriority
