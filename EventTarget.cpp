@@ -55,7 +55,7 @@ int EventTarget::publish_message(const MsgEntity &msg)
 	}
 
 	thread::id id = this_thread::get_id();
-	EventBus *msg_center = MsgCenterSingleton::instance();
+	EventBus *msg_center = EventSingleton::instance();
 	EventClient *client = msg_center->find_client(id);
 	if(client == NULL)
 	{
@@ -115,7 +115,7 @@ void EventTarget::publish_thread_message(const MsgEntity &msg)
 
 	thread::id id = this_thread::get_id();
 
-	EventBus *msg_center = MsgCenterSingleton::instance();
+	EventBus *msg_center = EventSingleton::instance();
 
 	EventClient *client = msg_center->find_client(id);
 
@@ -318,7 +318,7 @@ EventTarget::EventTarget()
 	thread::id id = this_thread::get_id();
 	
 	// 从消息中心中检索出消息客户对象。
-	EventBus *msg_center = MsgCenterSingleton::instance();
+	EventBus *msg_center = EventSingleton::instance();
 	_client = msg_center->find_client(id);
 	
 	if(_client == NULL)

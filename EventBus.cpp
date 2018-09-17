@@ -6,8 +6,10 @@
 #include "EventBus.h"
 #include "EventClient.h"
 
+#include "zmq/zmq.h"
+//const char* EventBus::MESSAGE_CENTER_ENDPOINT = "inproc://message_center";
 
-const char* EventBus::MESSAGE_CENTER_ENDPOINT = "inproc://message_center";
+void* EventBus::ZmqContext = zmq_ctx_new();
 
 
 /**************************************************************************
@@ -54,6 +56,17 @@ EventClient *EventBus::find_client(thread::id id)
 	return (*it).second;
 }
 
+/******************************************************************************
+作者：何登锋
+功能描述：
+参数说明：
+返回值：
+******************************************************************************/
+void EventBus::_thread_run(void *arg)
+{
+	EventBus *self = reinterpret_cast<EventBus*>(arg);
+	zmq_proxy(self->_xsub_socket, self->_xpub_socket, NULL);
+}
 
 /******************************************************************************
 作者：何登锋
@@ -63,7 +76,19 @@ EventClient *EventBus::find_client(thread::id id)
 ******************************************************************************/
 EventBus::EventBus()
 {
+	assert(ZmqContext);
+	_xpub_socket = zmq_socket(ZmqContext, ZMQ_XPUB);
+	assert(_xpub_socket);
+	int rc = zmq_bind(_xpub_socket, XPUB_ADDR_PORT);
+	assert(rc==0);
 
+	_xsub_socket = zmq_socket(ZmqContext, ZMQ_XSUB);
+	assert(_xsub_socket);
+	rc = zmq_bind(_xsub_socket, XSUB_ADDR_PORT);
+	assert(rc==0);
+
+
+	_bus_proxy_thread = new thread(_thread_run, this);
 }
 
 

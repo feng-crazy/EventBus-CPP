@@ -17,6 +17,8 @@
 #include "Singleton.h"
 #include "StandardHead.h"
 
+typedef unsigned Message;
+
 
 class EventClient;
 struct MsgEntity;
@@ -34,20 +36,29 @@ class EventBus
 
 		const char* XSUB_ADDR_PORT = "inproc://XsubEndpoint";
 		const char* XPUB_ADDR_PORT = "inproc://XpubEndpoint";
+		static void *ZmqContext;
 
 	private:
 		EventBus();
 		DECLARE_SINGLETON_CLASS(EventBus);
 
+        static void _thread_run(void *arg);
+
 		// 保存了所有的消息客户系统对象，它需要互斥保护。
 		typedef std::map<thread::id, EventClient*> MsgCenterMap;
 		typedef std::pair<thread::id, EventClient*> MsgCenterPair;
+
 		MsgCenterMap _client_pool;
+
+        void *_xpub_socket;
+        void *_xsub_socket;
+
+        thread *_bus_proxy_thread;
 
 		recursive_mutex _mutex;  // 保护_client_pool。
 
 };
-typedef Singleton<EventBus> MsgCenterSingleton;
+typedef Singleton<EventBus> EventSingleton;
 
 
 #endif

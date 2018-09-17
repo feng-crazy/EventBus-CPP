@@ -2,12 +2,12 @@
 #	AUTHOR: hedengfeng
 #	DESCRIPTION:
 ############################################################################
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.5)
 
 #MESSAGE(STATUS "This is BINARY dir " ${PROJECT_BINARY_DIR})
 #MESSAGE(STATUS "This is SOURCE dir "${PROJECT_SOURCE_DIR})
 
-PROJECT(MsgCenter)
+PROJECT(EventBus)
 
 # 目标程序的运行环境
 set(CMAKE_SYSTEM_NAME Linux)
@@ -53,6 +53,7 @@ ADD_DEFINITIONS(
 
 # 源文件列表
 set(SRCS EventTarget.cpp EventBus.cpp EventClient.cpp MThread.cpp)
+#set(SRCS EventBus.cpp)
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
@@ -60,12 +61,12 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 link_directories(${PROJECT_BINARY_DIR}/lib)
 
-add_library(MsgCenter STATIC ${SRCS})
+add_library(EventBus STATIC ${SRCS})
 
-#target_link_libraries(EventBus zmq)
+target_link_libraries(EventBus zmq pthread)
 
 # 单元测试目录
-add_subdirectory(UnitTest)
+#add_subdirectory(UnitTest)
 
 
 # 交叉编译时, 所有库使用动态链接，使用静态链接会报错，原因未知
