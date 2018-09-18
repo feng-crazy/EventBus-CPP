@@ -4,21 +4,20 @@
 
 #ifndef EVENTBUS_EVENTDEFINE_H
 
-typedef long WParam;
-typedef long LParam;
-typedef unsigned Event;
+typedef const char* EventType;
+typedef char* EventContent;
 
-// 事件的优先级
-enum EventPriority
-{
-  MP_NORMAL,
-  MP_PRIORITY
-};
-
-
-struct EventContent
-{
-
-};
+//// 事件的优先级
+//enum EventPriority
+//{
+//  MP_NORMAL,
+//  MP_PRIORITY
+//};
+//
+//
+//struct EventContent
+//{
+//
+//};
 
 #endif //EVENTBUS_EVENTDEFINE_H

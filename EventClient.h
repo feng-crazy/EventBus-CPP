@@ -21,30 +21,23 @@ class EventClient
 {
 	public:
 		// 注册、撤销对一条事件的关注。
-		bool register_observer(Event id, EventTarget &object);
-		bool unregister_observer(Event id, const EventTarget &object);
+		bool register_observer(EventType type, EventTarget &object);
+		bool unregister_observer(EventType type, const EventTarget &object);
+
+		void handle_event(void);
+
+		void publish_event(EventType type, EventContent content);
 		
 		// MsgClient的父对象可以被设置为任何对象，但是将其设置为事件中心最为合适。
 		EventClient();
 		~EventClient();
 
 	private:
-  
-		// 每个事件Client处理的最大事件数量。
-		static const unsigned int EVENT_NR = 1024;
 
-		// 限制每条事件的订阅者数量。
-		static const unsigned int SUBSCRIBER_NR = 100;
+		typedef std::multimap<EventType, EventTarget*> EventObjectMap;
+		typedef std::pair<EventType, EventTarget*> EventObjectPair;
 
-		// 事件和其订阅者映射表，该订阅表中只是保存了事件于事件处理对象的对应关系。
-		// 事件可以是系统中所有的事件，包括本线程内部的，也包括其他线程发送来的事件，
-		// 需要注意的是事件处理对象都属于该线程的运行空间。很讨厌这种结构，不过能提高
-		// 效率。
-		struct MsgMap
-		{
-			EventTarget *_subscriber_nr[SUBSCRIBER_NR];
-			unsigned int subscriber_number;
-		} _event_object_map[EVENT_NR];
+		EventObjectMap _event_object_map;
 		
 
 		void *_zmq_context;

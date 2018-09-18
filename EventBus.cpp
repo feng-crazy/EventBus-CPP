@@ -21,11 +21,11 @@ void* EventBus::ZmqContext = zmq_ctx_new();
 **************************************************************************/
 bool EventBus::register_client(thread::id id, EventClient &client)
 {
-	pair<MsgCenterMap::iterator, bool> ret;
+	pair<ThreadClientMap::iterator, bool> ret;
 
 	lock_guard<std::recursive_mutex> lock(_mutex);
 
-	ret = _client_pool.insert(MsgCenterPair(id, &client));
+	ret = _client_pool.insert(ThreadClientPair(id, &client));
 
 	return ret.second;
 }
@@ -42,7 +42,7 @@ bool EventBus::register_client(thread::id id, EventClient &client)
 EventClient *EventBus::find_client(thread::id id)
 {
 
-	MsgCenterMap::iterator it;
+	ThreadClientMap::iterator it;
 
 	lock_guard<std::recursive_mutex> lock(_mutex);
 
@@ -89,6 +89,7 @@ EventBus::EventBus()
 
 
 	_bus_proxy_thread = new thread(_thread_run, this);
+	_bus_proxy_thread->detach();
 }
 
 
@@ -102,7 +103,7 @@ EventBus::EventBus()
 EventBus::~EventBus()
 {
 	// 析够所有的消息客户系统。
-	MsgCenterMap::iterator it = _client_pool.begin();
+	ThreadClientMap::iterator it = _client_pool.begin();
 	for(; it != _client_pool.end(); ++it)
 	{
 		delete (*it).second;

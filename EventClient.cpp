@@ -1,11 +1,12 @@
 ﻿/******************************************************************************
 作者：		何登锋
 功能说明：
-	消息客户端实现。
+	事件客户端实现。
 ******************************************************************************/
 #include "EventClient.h"
 #include "EventBus.h"
 #include "EventTarget.h"
+#include "EventDefine.h"
 #include <algorithm>
 
 
@@ -13,44 +14,31 @@
 /******************************************************************************
 作者: 何登锋
 功能描述:
-	订阅一条消息，实际上是在消息映射表中注册CmdTarget对象和消息的对应关系。
+	订阅一条事件，实际上是在事件映射表中注册EvnetTarget对象和事件的对应关系。
 参数说明:
 返回值:
 ******************************************************************************/
-bool EventClient::register_observer(Message id, EventTarget &object)
+bool EventClient::register_observer(EventType type, EventTarget &object)
 {
-	if(id >= EVENT_NR)
+
+	auto search = _event_object_map.find(type);
+	if(search != _event_object_map.end())
 	{
-		return false;
+		_event_object_map.insert(EventObjectPair(type, &object));
+		return true;
 	}
-
-	EventTarget *cmd_target = NULL;
-
-	// 确定该对象没有订阅该消息。
-	for(unsigned int i=0; i<SUBSCRIBER_NR; i++)
+	else
 	{
-		cmd_target = _event_object_map[id]._subscriber_nr[i];
-		if((cmd_target != NULL) && (*cmd_target == object))
+		_event_object_map.insert(EventObjectPair(type, &object));
+		int rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, type, strlen(type));
+		if(rc != 0)
 		{
+			printf("register_observer failure\n");
 			return false;
 		}
+		return true;
 	}
 
-	for(unsigned int i=0; i<SUBSCRIBER_NR; i++)
-	{
-		cmd_target = _event_object_map[id]._subscriber_nr[i];
-		if(cmd_target == NULL)
-		{
-			_event_object_map[id]._subscriber_nr[i] = &object;
-			_event_object_map[id].subscriber_number++;
-			return true;
-		}
-	}
-
-	// 订阅者已经满了。
-	printf("register_observer failed, and msgid = %d\n", id);
-//	stack_trace();
-	return false;
 }
 
 
@@ -58,45 +46,53 @@ bool EventClient::register_observer(Message id, EventTarget &object)
 /******************************************************************************
 作者: 何登锋
 功能描述:
-	撤销对一条消息的订阅。
+	撤销对一条事件的订阅。
 参数说明:
 返回值:
 ******************************************************************************/
-bool EventClient::unregister_observer(Message id, const EventTarget &object)
+bool EventClient::unregister_observer(EventType type, const EventTarget &object)
 {
-	if(id >= EVENT_NR)
+	for(auto it = _event_object_map.begin(); it != _event_object_map.end();)
 	{
-		return false;
-	}
-
-	if(_event_object_map[id].subscriber_number == 0)
-	{
-		return false;
-	}
-
-	EventTarget *cmd_target = NULL;
-
-	for(unsigned int i=0; i<SUBSCRIBER_NR; i++)
-	{
-		cmd_target = _event_object_map[id]._subscriber_nr[i];
-		if(cmd_target == NULL)
+		if ((strcmp(it->first, type)==0) && it->second==&object)
 		{
-			continue;
-		}
+			it = _event_object_map.erase(it);
 
-		if(*cmd_target == object)
-		{
-			_event_object_map[id]._subscriber_nr[i] = NULL;
-			_event_object_map[id].subscriber_number--;
+			// 最后一个订阅事件的目标则zmq取消接收该事件
+			auto search = _event_object_map.find(type);
+			if(search == _event_object_map.end())
+			{
+				int rc = zmq_setsockopt(_sub_socket, ZMQ_UNSUBSCRIBE, type, strlen(type));
+				if(rc != 0)
+				{
+					printf("register_observer failure\n");
+					return false;
+				}
+			}
 			return true;
+			
+		}
+		else 
+		{
+			++it;
 		}
 	}
 
-	return false;
+	
+	return true;
 }
 
 
+/******************************************************************************
+作者：何登锋
+功能描述：
+参数说明：
+返回值：
+******************************************************************************/
+void EventClient::handle_event(void)
+{
 
+}
 
 /******************************************************************************
 作者：何登锋
@@ -117,9 +113,9 @@ EventClient::EventClient()
 		}
 	}
 
-	EventBus *event_bus = EventSingleton::instance();
+	EventBus *event_bus = EventBusSingleton::instance();
 
-	_zmq_context = event_bus->getZmqContext();
+	_zmq_context = EventBus::ZmqContext;
 
 	thread::id self_id= this_thread::get_id();
 	printf("self_id = %p,%d, _zmq_context = %p \n",self_id,self_id,_zmq_context);
@@ -129,18 +125,18 @@ EventClient::EventClient()
 	_sub_socket = zmq_socket(_zmq_context, ZMQ_SUB);
 	assert(_sub_socket);
 
-	int rc = zmq_connect(_sub_socket, EventBus::MESSAGE_CENTER_ENDPOINT);
+	int rc = zmq_connect(_sub_socket, event_bus->XSUB_ADDR_PORT);
 	assert(rc == 0);
 
-	rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, "boy", 3);
-	assert(rc == 0);
-	rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, "girl", 4);
-	assert(rc == 0);
+//	rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, "boy", 3);
+//	assert(rc == 0);
+//	rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, "girl", 4);
+//	assert(rc == 0);
 
 	_pub_socket = zmq_socket(_zmq_context,ZMQ_PUB);
 	assert(_pub_socket);
 
-	rc = zmq_bind(_pub_socket, EventBus::MESSAGE_CENTER_ENDPOINT);
+	rc = zmq_connect(_pub_socket, event_bus->XPUB_ADDR_PORT);
 	assert(rc == 0);
 
 
@@ -162,6 +158,8 @@ EventClient::~EventClient()
 {
 
 }
+
+
 
 
 

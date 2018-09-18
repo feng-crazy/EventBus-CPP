@@ -17,7 +17,6 @@
 #include "Singleton.h"
 #include "StandardHead.h"
 #include "EventDefine.h"
-//typedef unsigned Event;
 
 
 class EventClient;
@@ -45,10 +44,10 @@ class EventBus
         static void _thread_run(void *arg);
 
 		// 保存了所有的消息客户系统对象，它需要互斥保护。
-		typedef std::map<thread::id, EventClient*> MsgCenterMap;
-		typedef std::pair<thread::id, EventClient*> MsgCenterPair;
+		typedef std::map<thread::id, EventClient*> ThreadClientMap;
+		typedef std::pair<thread::id, EventClient*> ThreadClientPair;
 
-		MsgCenterMap _client_pool;
+		ThreadClientMap _client_pool;
 
         void *_xpub_socket;
         void *_xsub_socket;

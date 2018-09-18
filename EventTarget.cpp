@@ -193,7 +193,7 @@ void EventTarget::flush_thread_message(void)
 返回值:
 	订阅成功返回true，否则false，一个对象重复订阅一条消息的时候会返回false。
 ******************************************************************************/
-bool EventTarget::subscribe(Event id, EventTarget &object)
+bool EventTarget::subscribe(EventType id, EventTarget &object)
 {
 	if(_client == NULL)
 	{
@@ -216,7 +216,7 @@ bool EventTarget::subscribe(Event id, EventTarget &object)
 返回值:	
 	订阅成功返回true，否则false，一个对象重复订阅消息的时候会返回false。
 ******************************************************************************/
-void EventTarget::subscribe(Event start_id, Event end_id, EventTarget &object)
+void EventTarget::subscribe(EventType start_id, EventType end_id, EventTarget &object)
 {
 	for(unsigned int id=start_id; id<=end_id; id++)
 	{
@@ -236,7 +236,7 @@ void EventTarget::subscribe(Event start_id, Event end_id, EventTarget &object)
 返回值:	
 	订阅成功返回true，否则false。
 ******************************************************************************/
-bool EventTarget::unsubscribe(Event id, EventTarget &object)
+bool EventTarget::unsubscribe(EventType id, EventTarget &object)
 {
 	if(_client == NULL)
 	{
@@ -259,7 +259,7 @@ bool EventTarget::unsubscribe(Event id, EventTarget &object)
 返回值:	
 	订阅成功返回true，否则false。
 ******************************************************************************/
-void EventTarget::unsubscribe(Event start_id, Event end_id, EventTarget &object)
+void EventTarget::unsubscribe(EventType start_id, EventType end_id, EventTarget &object)
 {
 	for(unsigned int id=start_id; id<=end_id; id++)
 	{
