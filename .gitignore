@@ -34,7 +34,13 @@ cmake-build-debug
 
 
 # Intellij
-*.iml
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/libraries
+/.idea/*.iml
+/.idea/workspace.xml
+/.idea/tasks.xml
+/.idea/libraries
+
+#eclipse
+.settings
+.cproject
+.project
+
