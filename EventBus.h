@@ -16,8 +16,8 @@
 
 #include "Singleton.h"
 #include "StandardHead.h"
-
-typedef unsigned Message;
+#include "EventDefine.h"
+//typedef unsigned Event;
 
 
 class EventClient;
@@ -58,7 +58,7 @@ class EventBus
 		recursive_mutex _mutex;  // 保护_client_pool。
 
 };
-typedef Singleton<EventBus> EventSingleton;
+typedef Singleton<EventBus> EventBusSingleton;
 
 
 #endif

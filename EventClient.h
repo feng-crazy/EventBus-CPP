@@ -21,8 +21,8 @@ class EventClient
 {
 	public:
 		// 注册、撤销对一条事件的关注。
-		bool register_observer(Message id, EventTarget &object);
-		bool unregister_observer(Message id, const EventTarget &object);
+		bool register_observer(Event id, EventTarget &object);
+		bool unregister_observer(Event id, const EventTarget &object);
 		
 		// MsgClient的父对象可以被设置为任何对象，但是将其设置为事件中心最为合适。
 		EventClient();

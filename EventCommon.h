@@ -13,6 +13,7 @@
 #include "EventBus.h"
 #include "EventClient.h"
 #include "EventTarget.h"
+#include "EventDefine.h"
 
 #include "Singleton.h"
 
