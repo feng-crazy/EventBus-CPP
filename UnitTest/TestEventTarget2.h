@@ -9,38 +9,34 @@
 #define UNITTEST_TESTEVENTTARGET2_H_
 
 #include "EventCommon.h"
-#include "EvemtType.h"
+#include "EventType.h"
 
 
 class TestEventTarget2 : public EventTarget {
 public:
-    int message_handle(const MsgEntity &msg) {
-        printf("TestEventTarget2 message_handle msg id:%d ,%s\n", msg.id, msg.wparam);
+    int event_handle(EventType type, EventContent content)
+    {
+        printf("TestEventTarget2 event_handle event type:%s\n", type.c_str());
         return 0;
     }
 
     void object_test() {
-        printf("TestEventTarget2 object_test publish_thread_message\n");
+        printf("TestEventTarget2 object_test publish_event EVENT_TEST_TARGET_2\n");
 
-        MsgEntity msg;
-        msg.id = MSG_TEST_TARGET_2;
-        string str = "MobjectTest2";
-        msg.wparam = (WParam) (str.c_str());
-        msg.wsize = str.size() + 1;
-        msg.priority = MP_NORMAL;
-        msg.lparam = 0;
-        msg.lsize = 0;
-        publish_thread_message(msg);
+        EventType type = EVENT_TEST_TARGET_2;
+        EventContent content;
+
+        publish_event(type, content);
     }
 
     TestEventTarget2() {
-        subscribe(MSG_TEST_TARGET_1, *this);
-        subscribe(MSG_SYSTEM_STARTUP, *this);
+        subscribe(EVENT_TEST_TARGET_1, *this);
+        subscribe(EVENT_SYSTEM_STARTUP, *this);
     };
 
     ~TestEventTarget2() {
-        unsubscribe(MSG_TEST_TARGET_1, *this);
-        unsubscribe(MSG_SYSTEM_TIME_1, *this);
+        unsubscribe(EVENT_TEST_TARGET_1, *this);
+        unsubscribe(EVENT_SYSTEM_TIME_1, *this);
     };
 
     virtual void SetUp() {};

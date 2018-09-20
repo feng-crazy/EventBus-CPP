@@ -66,7 +66,7 @@ add_library(EventBus STATIC ${SRCS})
 target_link_libraries(EventBus zmq pthread)
 
 # 单元测试目录
-#add_subdirectory(UnitTest)
+add_subdirectory(UnitTest)
 
 
 # 交叉编译时, 所有库使用动态链接，使用静态链接会报错，原因未知

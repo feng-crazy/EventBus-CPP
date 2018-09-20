@@ -15,6 +15,7 @@
 #include "StandardHead.h"
 #include "EventDefine.h"
 #include "zmq/zmq.h"
+#include "MZmq.h"
 
 class EventTarget;
 class EventClient
@@ -27,6 +28,10 @@ class EventClient
 		void handle_event(void);
 
 		void publish_event(EventType type, EventContent content);
+
+		void publish_loc_event(EventType type, EventContent content);
+
+		zmq_pollitem_t sub_items;
 		
 		// MsgClient的父对象可以被设置为任何对象，但是将其设置为事件中心最为合适。
 		EventClient();

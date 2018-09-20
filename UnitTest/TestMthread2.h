@@ -9,7 +9,7 @@
 #define UNITTEST_TESTMTHREAD2_H_
 
 #include "EventCommon.h"
-#include "EvemtType.h"
+#include "EventType.h"
 
 #include "TestEventTarget2.h"
 
@@ -23,23 +23,15 @@ public:
 
 	~TestMthread2()
 	{
-		unsubscribe(MSG_TEST_THREAD_1, *this);
-		unsubscribe(MSG_SYSTEM_TIME_1, *this);
-		unsubscribe(MSG_SYSTEM_STARTUP, *this);
+		unsubscribe(EVENT_TEST_THREAD_1, *this);
+		unsubscribe(EVENT_SYSTEM_TIME_1, *this);
+		unsubscribe(EVENT_SYSTEM_STARTUP, *this);
 	};
 
-	int message_handle(const MsgEntity &msg)
+	int event_handle(EventType type, EventContent content)
 	{
-		printf("TestMthread2 message_handle msg id:%d ,%s\n",msg.id,msg.wparam);
-		switch(msg.id)
-		{
-			case MSG_SYSTEM_STARTUP:
-			{
-				run();
-				return 0;
-			}
+		printf("TestMthread2 event_handle event type:%s\n", type.c_str());
 
-		}
 		return 0;
 	};
 
@@ -51,9 +43,9 @@ protected:
 		 _test_setup_thread_flag = true;
 		 _object_test2 = new TestEventTarget2();
 
-		subscribe(MSG_TEST_THREAD_1, *this);
-		subscribe(MSG_SYSTEM_TIME_1, *this);
-		subscribe(MSG_SYSTEM_STARTUP, *this);
+		subscribe(EVENT_TEST_THREAD_1, *this);
+		subscribe(EVENT_SYSTEM_TIME_1, *this);
+		subscribe(EVENT_SYSTEM_STARTUP, *this);
 
 	 };
 

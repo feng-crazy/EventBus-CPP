@@ -47,7 +47,7 @@ void MThread::handle_message(void)
 		return;
 	}
 
-	_thread_client->handle_message();
+	_thread_client->handle_event();
 }
 
 /******************************************************************************
@@ -77,7 +77,7 @@ void *MThread::_thread_run(void *arg)
 	while(1)
 	{
 		//Mdebug("_thread_run pthread id:%d\n",pthread_self());
-		client->handle_message();
+		client->handle_event();
 		if(!mthread->_is_run)
 		{
 			this_thread::sleep_for(std::chrono::milliseconds(20));

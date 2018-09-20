@@ -4,8 +4,12 @@
 
 #ifndef EVENTBUS_EVENTDEFINE_H
 
-typedef const char* EventType;
-typedef char* EventContent;
+#include <string>
+#include <vector>
+
+
+typedef std::string EventType;
+typedef std::vector<unsigned char> EventContent;
 
 //// 事件的优先级
 //enum EventPriority
