@@ -21,7 +21,7 @@
 ******************************************************************************/
 bool EventClient::register_observer(EventType type, EventTarget &object)
 {
-
+//	printf("EventClient::register_observer this:%p type:%s, object:%p\n", this, type.c_str(), &object);
 	EventObjectMap::iterator it = _event_object_map.find(type);
 	if(it != _event_object_map.end())
 	{
@@ -37,7 +37,7 @@ bool EventClient::register_observer(EventType type, EventTarget &object)
 	else
 	{
 		_event_object_map.insert(EventObjectPair(type, &object));
-		int rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, type.c_str (), type.length ());
+		int rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, type.c_str (), type.length());
 		if(rc != 0)
 		{
 			printf("register_observer failure\n");
@@ -60,6 +60,7 @@ bool EventClient::register_observer(EventType type, EventTarget &object)
 ******************************************************************************/
 bool EventClient::unregister_observer(EventType type, const EventTarget &object)
 {
+//	printf("EventClient::unregister_observer this:%p type:%s, object:%p\n", this, type.c_str(), &object);
 	for(auto it = _event_object_map.begin(); it != _event_object_map.end();)
 	{
 		if ((type.compare(it->first)==0) && it->second==&object)
@@ -98,13 +99,15 @@ bool EventClient::unregister_observer(EventType type, const EventTarget &object)
 ******************************************************************************/
 void EventClient::publish_event (EventType type, EventContent content)
 {
+//	printf("EventClient::publish_event type:%s\n", type.c_str());
 	unsigned char *data = NULL;
 	if(!content.empty())
 	{
 		data = &content[0];
 	}
 
-	MZmq::SendEventEntity(_pub_socket, type, data, content.size());
+	int rc = MZmq::SendEventEntity(_pub_socket, type, data, content.size());
+//	printf("SendEventEntity rc = %d\n", rc);
 }
 
 /******************************************************************************
@@ -115,6 +118,7 @@ void EventClient::publish_event (EventType type, EventContent content)
 ******************************************************************************/
 void EventClient::publish_loc_event (EventType type, EventContent content)
 {
+//	printf("EventClient::publish_loc_event type:%s\n");
 	auto search = _event_object_map.find(type);
 	for(; search != _event_object_map.end ();++search)
 	{
@@ -131,18 +135,22 @@ void EventClient::publish_loc_event (EventType type, EventContent content)
 ******************************************************************************/
 void EventClient::handle_event(void)
 {
-	zmq_poll(&sub_items, 1, 0);
+	zmq_poll(&sub_items, 1, 20);
 
 	if (sub_items.revents & ZMQ_POLLIN)
-	{
+    {
+//        printf("zmq poll sub_items.revents: %d, pollin:%d\n", sub_items.revents, ZMQ_POLLIN);
 		string title;
 		vector<unsigned char> content;
-		MZmq::RecvEventEntity (_sub_socket, title, content);
+		int rc =  MZmq::RecvEventEntity (_sub_socket, title, content);
 
-		auto search = _event_object_map.find(title);
-		for(; search != _event_object_map.end ();++search)
+
+
+		auto search = _event_object_map.equal_range(title);
+		for(auto it = search.first; it != search.second;++it)
 		{
-			search->second->event_handle(title, content);
+//		    printf("%p EventClient::handle_event type:%s, target:%p\n", this, title.c_str(), search->second);
+            it->second->event_handle(title, content);
 		}
 	}
 }
@@ -161,21 +169,21 @@ EventClient::EventClient()
 	_zmq_context = EventBus::ZmqContext;
 
 	thread::id self_id= this_thread::get_id();
-	printf("self_id = %p,%d, _zmq_context = %p \n",self_id,self_id,_zmq_context);
+//	printf("self_id = %p,%d, _zmq_context = %p \n",self_id,self_id,_zmq_context);
 
 
 	//创建zmq的套接字，设置套接字为请求应答模式
 	_sub_socket = zmq_socket(_zmq_context, ZMQ_SUB);
 	assert(_sub_socket);
 
-	int rc = zmq_connect(_sub_socket, event_bus->XSUB_ADDR_PORT);
+	int rc = zmq_connect(_sub_socket, event_bus->XPUB_ADDR_PORT);
 	assert(rc == 0);
 
 
 	_pub_socket = zmq_socket(_zmq_context, ZMQ_PUB);
 	assert(_pub_socket);
 
-	rc = zmq_connect(_pub_socket, event_bus->XPUB_ADDR_PORT);
+	rc = zmq_connect(_pub_socket, event_bus->XSUB_ADDR_PORT);
 	assert(rc == 0);
 
 //	sub_items = { _sub_socket, 0, ZMQ_POLLIN, 0 };

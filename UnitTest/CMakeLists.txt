@@ -14,6 +14,10 @@ link_directories("/usr/local/lib")
 
 add_executable(test_bin main.cpp)
 
+set_target_properties(test_bin PROPERTIES LINK_FLAGS "-rdynamic")
+
 target_link_libraries(test_bin EventBus pthread dl)
+
+target_link_libraries(test_bin  -Wl,-Bdynamic )
 
 

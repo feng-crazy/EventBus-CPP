@@ -36,7 +36,7 @@ public:
 
     ~TestEventTarget2() {
         unsubscribe(EVENT_TEST_TARGET_1, *this);
-        unsubscribe(EVENT_SYSTEM_TIME_1, *this);
+        unsubscribe(EVENT_SYSTEM_STARTUP, *this);
     };
 
     virtual void SetUp() {};

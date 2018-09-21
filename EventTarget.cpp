@@ -143,8 +143,8 @@ EventTarget::EventTarget()
 	thread::id id = this_thread::get_id();
 	
 	// 从事件中心中检索出事件客户对象。
-	EventBus *msg_center = EventBusSingleton::instance();
-	_client = msg_center->find_client(id);
+	EventBus *event_bus = EventBusSingleton::instance();
+	_client = event_bus->find_client(id);
 	
 	if(_client == NULL)
 	{
