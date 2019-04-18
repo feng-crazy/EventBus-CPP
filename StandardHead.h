@@ -15,6 +15,7 @@
 #include <errno.h>
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <map>
@@ -25,6 +26,8 @@
 #include <thread>
 #include <mutex>
 
+#include "../utility/DebugCtrl.h"
+#include "../utility/MLogOut.h"
 
 using namespace std;
 

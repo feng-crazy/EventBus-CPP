@@ -5,7 +5,7 @@
 ******************************************************************************/
 #include "EventTarget.h"
 #include "EventClient.h"
-#include "EventBus.h"
+#include "ClientCenter.h"
 #include "EventDefine.h"
 
 const int NONE_HANDLE = 0xA5A5A5EF; // 随机数据没有任何意义，不要追究为什么。
@@ -143,12 +143,12 @@ EventTarget::EventTarget()
 	thread::id id = this_thread::get_id();
 	
 	// 从事件中心中检索出事件客户对象。
-	EventBus *event_bus = EventBusSingleton::instance();
-	_client = event_bus->find_client(id);
+	ClientCenter *client_center = ClientCenterSingleton::instance();
+	_client = client_center->find_client(id);
 	
 	if(_client == NULL)
 	{
-		printf("Can't find message client!\n");
+		mdebug("Can't find message client! %d\n");
 	}
 }
 

@@ -47,7 +47,7 @@ namespace MZmq
 			}
 		}
 		zmq_msg_close(&msg);
-		return 0;
+		return rc;
 	}
 
 
@@ -98,7 +98,7 @@ namespace MZmq
 		content.insert(content.begin(), (unsigned char*)zmq_msg_data(&msg), (unsigned char*)zmq_msg_data(&msg) + size);
 
 		zmq_msg_close(&msg);
-		return 0;
+		return size;
 	}
 
 	static bool HasMoreMsg(void* s)
@@ -152,8 +152,112 @@ namespace MZmq
 		}
 
 		zmq_msg_close(&msg);
-		return 0;
+		return rc;
 	}
+
+	static int Send3PartStrings(void* s, const std::string &title, const std::string & title1, std::string content)
+	{
+		zmq_msg_t msg;
+		int rc = -1;
+
+		//first frame: title
+		zmq_msg_init_size(&msg, title.size());
+		memcpy(zmq_msg_data(&msg), title.c_str(), title.size());
+		rc = zmq_msg_send(&msg, s, ZMQ_SNDMORE);
+		if (rc < 0)
+		{
+			zmq_msg_close(&msg);
+			return rc;
+		}
+
+		//
+		if (!title1.empty())
+		{
+			zmq_msg_init_size(&msg, title1.size());
+			memcpy(zmq_msg_data(&msg), title1.c_str(), title1.size());
+			rc = zmq_msg_send(&msg, s, ZMQ_SNDMORE);
+			if (rc < 0) {
+				zmq_msg_close(&msg);
+				return rc;
+			}
+		}
+
+		// 2rd frame: real data
+		if (!content.empty())
+		{
+			zmq_msg_init_size(&msg, content.size());
+			memcpy(zmq_msg_data(&msg), content.c_str(), content.size());
+			rc = zmq_msg_send(&msg, s, 0);
+			if (rc < 0) {
+				zmq_msg_close(&msg);
+				return rc;
+			}
+		}
+		else
+		{
+			char val = 0;
+			zmq_msg_init_size(&msg, 1);
+			memcpy(zmq_msg_data(&msg), &val, 1);
+			rc = zmq_msg_send(&msg, s, 0);
+			if (rc < 0)
+			{
+				zmq_msg_close(&msg);
+				return rc;
+			}
+		}
+
+		zmq_msg_close(&msg);
+		return rc;
+	}
+
+    static int RecvMsgString(void* s, std::string & title, std::string & content)
+    {
+            zmq_msg_t msg;
+            int more = 0, size = 0;
+            size_t moreSize = sizeof(more);
+            title.clear();
+            content.clear();
+
+            //first frame: title
+            zmq_msg_init(&msg);
+            size = zmq_msg_recv(&msg, s, ZMQ_DONTWAIT);
+
+            if (size < 0) {
+                    int errNum = zmq_errno();
+                    if (errNum == EAGAIN) {
+                            zmq_msg_close(&msg);
+                            return 0;
+                    }
+                    else {
+                            zmq_msg_close(&msg);
+                            return -1;
+                    }
+            }
+
+            title.insert(0, (const char*)zmq_msg_data(&msg), size);
+
+            zmq_getsockopt(s, ZMQ_RCVMORE, &more, &moreSize);
+            if (!more) {
+                    zmq_msg_close(&msg);
+                    return -1;
+            }
+            zmq_msg_close(&msg);
+
+            //2rd frame: real data
+            zmq_msg_init(&msg);
+            size = zmq_msg_recv(&msg, s, ZMQ_DONTWAIT);
+            if (size < 0) {
+                    zmq_msg_close(&msg);
+                    return size;
+            }
+
+            std::stringstream recv_stream;
+            recv_stream.write((const char *)zmq_msg_data(&msg),zmq_msg_size(&msg));
+            content = recv_stream.str();
+
+            zmq_msg_close(&msg);
+            return size;
+    }
 
     //Receive all available messages from a socket. This is useful when the messages arrive too
     //fast for the application to process. The Zeromq by default drops latest messages when the
@@ -225,7 +329,7 @@ namespace MZmq
 		}
 
 		zmq_msg_close(&msg);
-		return 0;
+		return contents.size();
 	}
 
 #if 0
@@ -263,7 +367,7 @@ namespace MZmq
 		content.insert(content.begin(), (unsigned char*)zmq_msg_data(&msg), (unsigned char*)zmq_msg_data(&msg) + size);
 
 		zmq_msg_close(&msg);
-		return 0;
+		return size;
 	}
 #endif
 

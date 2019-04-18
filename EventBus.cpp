@@ -3,58 +3,17 @@
 功能说明:
 
 ******************************************************************************/
+
+#include <signal.h>
+#include <thread>
+
 #include "EventBus.h"
-#include "EventClient.h"
 
 #include "zmq/zmq.h"
-//const char* EventBus::MESSAGE_CENTER_ENDPOINT = "inproc://message_center";
 
+const char* EventBus::XSUB_ADDR_PORT = "inproc://XsubEndpoint";
+const char* EventBus::XPUB_ADDR_PORT = "inproc://XpubEndpoint";
 void* EventBus::ZmqContext = zmq_ctx_new();
-
-
-/**************************************************************************
-作者: 何登锋
-功能描述:
-	注册消息客户系统。
-参数说明:
-返回值:
-**************************************************************************/
-bool EventBus::register_client(thread::id id, EventClient &client)
-{
-	pair<ThreadClientMap::iterator, bool> ret;
-
-	lock_guard<std::recursive_mutex> lock(_mutex);
-
-	ret = _client_pool.insert(ThreadClientPair(id, &client));
-
-	return ret.second;
-}
-
-
-
-/**************************************************************************
-作者: 何登锋
-功能描述:
-	返回消息客户系统。
-参数说明:
-返回值:
-**************************************************************************/
-EventClient *EventBus::find_client(thread::id id)
-{
-
-	ThreadClientMap::iterator it;
-
-	lock_guard<std::recursive_mutex> lock(_mutex);
-
-	it = _client_pool.find(id);
-
-	if(it == _client_pool.end())
-	{
-		return NULL;
-	}
-
-	return (*it).second;
-}
 
 /******************************************************************************
 作者：何登锋
@@ -62,8 +21,13 @@ EventClient *EventBus::find_client(thread::id id)
 参数说明：
 返回值：
 ******************************************************************************/
-void EventBus::_thread_run(void *arg)
+void EventBus::run(void *arg)
 {
+	if(arg == NULL)
+	{
+		return;
+	}
+
 	EventBus *self = reinterpret_cast<EventBus*>(arg);
 	zmq_proxy(self->_xsub_socket, self->_xpub_socket, NULL);
 }
@@ -74,9 +38,26 @@ void EventBus::_thread_run(void *arg)
 参数说明：
 返回值：
 ******************************************************************************/
-EventBus::EventBus()
+void EventBus::begin(void)
 {
-	assert(ZmqContext);
+	_self_thread = new thread(run, this);
+	if(_self_thread == NULL)
+	{
+		MLOG_DEBUGF("Create thread failure and error number is :%d\n",errno);
+		return;
+	}
+	_self_thread->detach();
+
+	this_id = _self_thread->get_id();
+}
+/******************************************************************************
+作者：何登锋
+功能描述：
+参数说明：
+返回值：
+******************************************************************************/
+EventBus::EventBus(): _self_thread(NULL)
+{
 	_xpub_socket = zmq_socket(ZmqContext, ZMQ_XPUB);
 	assert(_xpub_socket);
 	int rc = zmq_bind(_xpub_socket, XPUB_ADDR_PORT);
@@ -87,9 +68,6 @@ EventBus::EventBus()
 	rc = zmq_bind(_xsub_socket, XSUB_ADDR_PORT);
 	assert(rc==0);
 
-
-	_bus_proxy_thread = new thread(_thread_run, this);
-	_bus_proxy_thread->detach();
 }
 
 
@@ -102,11 +80,64 @@ EventBus::EventBus()
 ******************************************************************************/
 EventBus::~EventBus()
 {
-	// 析够所有的消息客户系统。
-	ThreadClientMap::iterator it = _client_pool.begin();
-	for(; it != _client_pool.end(); ++it)
-	{
-		delete (*it).second;
-	}
+	zmq_disconnect(_xpub_socket, XPUB_ADDR_PORT);
+	zmq_close(_xpub_socket);
+
+	zmq_disconnect(_xsub_socket, XSUB_ADDR_PORT);
+	zmq_close(_xsub_socket);
+
+	zmq_ctx_destroy(ZmqContext);
+
+	delete _self_thread;
 }
 
+
+//EventBus *eventbus = NULL;
+//
+//static void signal_handler(int sig)
+//{
+//
+//	string s("signal is = ");
+//	s += to_string(sig);
+//
+//	stack_trace(s.c_str());
+//
+//	signal(sig, SIG_DFL);
+//	raise(sig);
+//
+//	if(eventbus)
+//	{
+//		delete eventbus;
+//		eventbus = NULL;
+//	}
+//}
+//
+//static void registerSignal()
+//{
+//	signal(SIGINT, signal_handler);
+//	signal(SIGQUIT, signal_handler);
+//	signal(SIGILL, signal_handler);
+//	signal(SIGTRAP, signal_handler);
+//	signal(SIGABRT, signal_handler);
+//	signal(SIGIOT, signal_handler);
+//	signal(SIGBUS, signal_handler);
+//	signal(SIGFPE, signal_handler);
+//	signal(SIGKILL, signal_handler);
+//	signal(SIGSEGV, signal_handler);
+//	signal(SIGTERM, signal_handler);
+//	signal(SIGSTKFLT, signal_handler);
+//	signal(SIGPIPE, SIG_IGN);
+//}
+//
+//int main(int argc, char *argv[])
+//{
+//	registerSignal();
+//
+//	eventbus = new EventBus();
+//	eventbus->run();
+//
+//	mdebug("eventbus except exit()\n");
+//	delete eventbus;
+//
+//	exit(0);
+//}

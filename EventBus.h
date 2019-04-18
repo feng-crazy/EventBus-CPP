@@ -14,50 +14,32 @@
 #ifndef _EVENT_BUS_H
 #define _EVENT_BUS_H
 
-#include "Singleton.h"
 #include "StandardHead.h"
-#include "EventDefine.h"
 
-
-class EventClient;
-struct MsgEntity;
 class EventBus
 {
 	public:
-		// 注册消息客户对象。
-		bool register_client(thread::id id, EventClient &client);
 
-		// 根据id查找消息客户对象。
-		EventClient *find_client(thread::id id);
-
+		EventBus();
 		~EventBus();
 
-
-		const char* XSUB_ADDR_PORT = "inproc://XsubEndpoint";
-		const char* XPUB_ADDR_PORT = "inproc://XpubEndpoint";
+		static const char* XSUB_ADDR_PORT;
+		static const char* XPUB_ADDR_PORT;
 		static void *ZmqContext;
 
+		static void run(void *arg);
+		void begin(void);
+
+		thread::id this_id;
+
 	private:
-		EventBus();
-		DECLARE_SINGLETON_CLASS(EventBus);
-
-        static void _thread_run(void *arg);
-
-		// 保存了所有的消息客户系统对象，它需要互斥保护。
-		typedef std::map<thread::id, EventClient*> ThreadClientMap;
-		typedef std::pair<thread::id, EventClient*> ThreadClientPair;
-
-		ThreadClientMap _client_pool;
 
         void *_xpub_socket;
         void *_xsub_socket;
 
-        thread *_bus_proxy_thread;
-
-		recursive_mutex _mutex;  // 保护_client_pool。
+        thread *_self_thread;
 
 };
-typedef Singleton<EventBus> EventBusSingleton;
 
 
 #endif

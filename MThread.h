@@ -25,10 +25,12 @@ class MThread : public EventTarget
 		void init(void);
 		
 		// 启动该线程。
-		void run(void);
+		void task_begin(void);
 		
 		// 停止该线程的运行。
-		void stop(void);
+		void task_stop(void);
+
+		void task_exit(void);
 
 		// 处理消息队列，该方法在线程中比较消耗时间的地方调用，这样可以处理消息队列。比如，在
 		// 某个地方需要等待某事件发生，这时可以调用该方法处理消息队列。
@@ -53,6 +55,8 @@ class MThread : public EventTarget
 
 		// 该成员会被不同的线程访问，由于一个读，一个写，而且操作也不频繁，因此未加保护。
 		bool _is_run;
+
+		bool _is_exit;
 
 		thread *_self_thread;
 };

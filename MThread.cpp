@@ -15,7 +15,7 @@
 参数说明：
 返回值：
 ******************************************************************************/
-void MThread::run(void)
+void MThread::task_begin(void)
 {
 	_is_run = true;
 }
@@ -26,7 +26,7 @@ void MThread::run(void)
 参数说明：
 返回值：
 ******************************************************************************/
-void MThread::stop(void)
+void MThread::task_stop(void)
 {
 	_is_run = false;
 }
@@ -74,7 +74,7 @@ void *MThread::_thread_run(void *arg)
 	// 调用子类的设置方法。
 	mthread->setup_thread();
 
-	while(1)
+	while(!mthread->_is_exit)
 	{
 		//Mdebug("_thread_run pthread id:%d\n",pthread_self());
 		client->handle_event();
@@ -101,7 +101,7 @@ void MThread::init(void)
 	_self_thread = new thread(_thread_run, this);
 	if(_self_thread == NULL)
 	{
-		printf("Create thread failure and error number is :%d\n",errno);
+		MLOG_DEBUGF("Create thread failure and error number is :%d\n",errno);
 		return;
 	}
 	_self_thread->detach();
@@ -116,8 +116,9 @@ void MThread::init(void)
 参数说明：
 返回值：
 ******************************************************************************/
-MThread::MThread() : EventTarget()
+MThread::MThread() : EventTarget(), _self_thread(NULL)
 {
+	_is_exit = false;
 	_is_run = false;
 	_thread_client = NULL;
 }
@@ -131,4 +132,9 @@ MThread::MThread() : EventTarget()
 MThread::~MThread()
 {
 	delete _thread_client;
+}
+
+void MThread::task_exit(void)
+{
+	_is_exit = true;
 }

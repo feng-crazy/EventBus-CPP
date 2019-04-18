@@ -17,6 +17,7 @@
 #include "zmq/zmq.h"
 #include "MZmq.h"
 
+class ClientCenter;
 class EventTarget;
 class EventClient
 {
@@ -44,7 +45,7 @@ class EventClient
 
 		EventObjectMap _event_object_map;
 		
-
+		ClientCenter *_client_center;
 		void *_zmq_context;
 		void *_sub_socket;
 		void *_pub_socket;

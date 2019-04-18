@@ -5,10 +5,11 @@
 ******************************************************************************/
 #include <algorithm>
 #include "EventClient.h"
-#include "EventBus.h"
+#include "ClientCenter.h"
 #include "EventTarget.h"
 #include "EventDefine.h"
 #include "MZmq.h"
+#include "EventBus.h"
 
 
 
@@ -40,7 +41,7 @@ bool EventClient::register_observer(EventType type, EventTarget &object)
 		int rc = zmq_setsockopt(_sub_socket, ZMQ_SUBSCRIBE, type.c_str (), type.length());
 		if(rc != 0)
 		{
-			printf("register_observer failure\n");
+			mdebug("register_observer failure\n");
 			return false;
 		}
 		return true;
@@ -74,7 +75,7 @@ bool EventClient::unregister_observer(EventType type, const EventTarget &object)
 				int rc = zmq_setsockopt(_sub_socket, ZMQ_UNSUBSCRIBE, type.c_str (), type.length ());
 				if(rc != 0)
 				{
-					printf("register_observer failure\n");
+					mdebug("register_observer failure\n");
 					return false;
 				}
 			}
@@ -107,12 +108,12 @@ void EventClient::publish_event (EventType type, EventContent content)
 	}
 
 	int rc = MZmq::SendEventEntity(_pub_socket, type, data, content.size());
-//	printf("SendEventEntity rc = %d\n", rc);
+//	mdebug("SendEventEntity rc = %d\n", rc);
 }
 
 /******************************************************************************
 作者：何登锋
-功能描述：发布一个事件到本地客户端，不到EventBus上，在本客户端的订阅者将会直接调用
+功能描述：发布一个事件到本地客户端，不到ClientCenter上，在本客户端的订阅者将会直接调用
 参数说明：
 返回值：
 ******************************************************************************/
@@ -136,20 +137,19 @@ void EventClient::publish_loc_event (EventType type, EventContent content)
 void EventClient::handle_event(void)
 {
 	zmq_poll(&sub_items, 1, 20);
-
+//	mdebug("EventClient::handle_event zmq_poll \n");
 	if (sub_items.revents & ZMQ_POLLIN)
     {
-//        printf("zmq poll sub_items.revents: %d, pollin:%d\n", sub_items.revents, ZMQ_POLLIN);
+//		mdebug("zmq poll sub_items.revents: %d, pollin:%d\n", sub_items.revents, ZMQ_POLLIN);
 		string title;
 		vector<unsigned char> content;
 		int rc =  MZmq::RecvEventEntity (_sub_socket, title, content);
-
-
+//		mdebug("RecvEventEntity rc = %d\n", rc);
 
 		auto search = _event_object_map.equal_range(title);
 		for(auto it = search.first; it != search.second;++it)
 		{
-//		    printf("%p EventClient::handle_event type:%s, target:%p\n", this, title.c_str(), search->second);
+//		    mdebug("%p EventClient::handle_event type:%s, target:%p\n", this, title.c_str(), search.second);
             it->second->event_handle(title, content);
 		}
 	}
@@ -164,26 +164,24 @@ void EventClient::handle_event(void)
 EventClient::EventClient()
 {
 
-	EventBus *event_bus = EventBusSingleton::instance();
+	_client_center = ClientCenterSingleton::instance();
 
 	_zmq_context = EventBus::ZmqContext;
 
 	thread::id self_id= this_thread::get_id();
 //	printf("self_id = %p,%d, _zmq_context = %p \n",self_id,self_id,_zmq_context);
 
-
 	//创建zmq的套接字，设置套接字为请求应答模式
 	_sub_socket = zmq_socket(_zmq_context, ZMQ_SUB);
 	assert(_sub_socket);
 
-	int rc = zmq_connect(_sub_socket, event_bus->XPUB_ADDR_PORT);
+	int rc = zmq_connect(_sub_socket, EventBus::XPUB_ADDR_PORT);
 	assert(rc == 0);
-
 
 	_pub_socket = zmq_socket(_zmq_context, ZMQ_PUB);
 	assert(_pub_socket);
 
-	rc = zmq_connect(_pub_socket, event_bus->XSUB_ADDR_PORT);
+	rc = zmq_connect(_pub_socket, EventBus::XSUB_ADDR_PORT);
 	assert(rc == 0);
 
 //	sub_items = { _sub_socket, 0, ZMQ_POLLIN, 0 };
@@ -193,9 +191,9 @@ EventClient::EventClient()
 	sub_items.revents = 0;
 
 
-	if(!event_bus->register_client(this_thread::get_id(), *this))
+	if(!_client_center->register_client(this_thread::get_id(), *this))
 	{
-		printf("Register client to event bus is failed!\n");
+		mdebug("Register client to event bus is failed!\n");
 	}
 }
 
@@ -209,7 +207,11 @@ EventClient::EventClient()
 ******************************************************************************/
 EventClient::~EventClient()
 {
+	zmq_disconnect(_pub_socket, EventBus::XPUB_ADDR_PORT);
+	zmq_close(_pub_socket);
 
+	zmq_disconnect(_sub_socket, EventBus::XPUB_ADDR_PORT);
+	zmq_close(_sub_socket);
 }
 
 
